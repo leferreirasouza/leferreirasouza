@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ApprovalLogEntry",
+  "description": "Immutable approval decision record. Never deleted. SHA-256 hash chain for tamper detection.",
+  "type": "object",
+  "required": ["logId", "timestamp", "artifactId", "artifactVersion", "workflowId", "requestedBy", "requiredRole", "decision", "immutableHash"],
+  "properties": {
+    "logId": { "type": "string", "description": "UUID, never reused" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "artifactId": { "type": "string" },
+    "artifactVersion": { "type": "integer", "minimum": 1 },
+    "workflowId": { "type": "string" },
+    "requestedBy": { "type": "string", "description": "userId" },
+    "decidedBy": { "type": "string", "description": "userId of approver" },
+    "requiredRole": {
+      "type": "string",
+      "enum": ["NONE", "IR_MANAGER", "HEAD_OF_IR", "CFO", "CEO_AND_CFO", "LEGAL_PLUS_CFO", "BOARD"]
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["APPROVED", "REJECTED", "RETURNED"]
+    },
+    "comments": { "type": "string" },
+    "immutableHash": {
+      "type": "string",
+      "description": "SHA-256 of this entry + previous entry hash. Enables tamper detection."
+    }
+  },
+  "additionalProperties": false
+}

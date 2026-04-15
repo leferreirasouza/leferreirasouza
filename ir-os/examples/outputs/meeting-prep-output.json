@@ -1,0 +1,71 @@
+{
+  "_comment": "Example output from MeetingPrepAgent — investor brief for one-on-one",
+  "agentId": "meeting-prep",
+  "classification": {
+    "classification": "INTERNAL_APPROVED",
+    "draftStatus": "DRAFT",
+    "requiresHumanApproval": true,
+    "approvalLevel": "IR_MANAGER"
+  },
+  "output": {
+    "action": "PREPARE_BRIEF",
+    "draftStatus": "DRAFT",
+    "internalUseOnly": true,
+    "meetingBrief": {
+      "meetingId": "mtg-2026-04-20-blackrock",
+      "investorSummaries": [
+        {
+          "investorId": "inv-blackrock-brazil-equity",
+          "name": "Portfolio Manager — Brazil Equities",
+          "firmName": "BlackRock Inc.",
+          "firmType": "LONG_ONLY",
+          "geography": "United States",
+          "lastMeetingDate": "2025-11-05",
+          "estimatedPosition": "~1.8% of free float (custody estimate, as of 1Q26)",
+          "keyThemes": ["Capital allocation policy", "EBITDA margin trajectory", "M&A strategy"],
+          "openConcerns": ["Working capital cycle lengthening in H2 2025", "Leverage headroom for acquisitions"],
+          "preferredTopics": ["FCF conversion improvement", "Return on invested capital"]
+        }
+      ],
+      "keyMessagingPoints": [
+        "[SOURCE: msg-2026-001] Capital allocation framework: 50% of FCF to dividends, 30% to organic growth capex, 20% optionality for M&A.",
+        "[SOURCE: msg-2026-002] EBITDA margin improvement driven by operational leverage and cost efficiency program initiated in 2H25.",
+        "[SOURCE: msg-2026-003] Leverage target: Net Debt/EBITDA below 2.0x through the cycle."
+      ],
+      "anticipatedQuestions": [
+        {
+          "question": "What is your leverage ceiling for M&A?",
+          "suggestedAnswer": "[SOURCE: qa-2026-042] We are comfortable operating up to 2.5x Net Debt/EBITDA for the right strategic acquisition, with a clear deleveraging path to below 2.0x within 18-24 months.",
+          "answerSource": "QA_LIBRARY",
+          "sensitivityLevel": "MEDIUM",
+          "doNotAnswer": false
+        },
+        {
+          "question": "Are you considering any guidance revision for 2026?",
+          "suggestedAnswer": "DRAFTED — NOT FROM APPROVED LIBRARY",
+          "answerSource": "DRAFTED",
+          "sensitivityLevel": "HIGH",
+          "doNotAnswer": true,
+          "doNotAnswerReason": "Guidance revision is PROHIBITED from discussion until formally approved. Respond: 'We are not in a position to comment on guidance outside of our formal earnings communications. We will update guidance at our Q1 2026 results call.'"
+        }
+      ],
+      "doNotDiscuss": [
+        "Any guidance revision or update (not yet approved)",
+        "Specific M&A targets (none publicly announced)",
+        "Upcoming management changes (none confirmed)",
+        "Preliminary Q1 2026 results (not yet closed)"
+      ],
+      "backgroundContext": "BlackRock has been a top-10 shareholder since 2023. Last meeting covered capital allocation and ESG disclosure. Tone was constructive. PM raised concerns about working capital cycle in Q4 2025 — these should be addressed with Q4 2025 results data.",
+      "lastInteractionSummary": "November 2025 roadshow meeting in New York. PM satisfied with strategic narrative but flagged concern about accounts receivable days. Committed to follow up with CFO explanation — verify this was followed up.",
+      "currentPosition": "Estimated ~1.8% free float. Stable.",
+      "perceptionRisk": "LOW — long-term holder, constructive on strategy. Main risk: if leverage increases above 2.5x without clear strategic rationale.",
+      "preparationChecklist": [
+        { "item": "Trading window confirmed open on meeting date", "completed": false, "critical": true },
+        { "item": "Q4 2025 results publicly available before meeting", "completed": true, "critical": true },
+        { "item": "Latest approved messaging confirmed with Head of IR", "completed": false, "critical": true },
+        { "item": "Reg FD reminder briefed to all meeting attendees", "completed": false, "critical": true },
+        { "item": "Working capital follow-up from Nov 2025 meeting confirmed completed", "completed": false, "critical": false }
+      ]
+    }
+  }
+}

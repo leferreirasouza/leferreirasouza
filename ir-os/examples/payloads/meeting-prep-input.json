@@ -1,0 +1,10 @@
+{
+  "_comment": "Example: Prepare brief for one-on-one with a long-only fund",
+  "endpoint": "POST /api/v1/workflows/meeting-prep",
+  "headers": { "Authorization": "Bearer <JWT_TOKEN_IR_MANAGER>" },
+  "body": {
+    "meetingId": "mtg-2026-04-20-blackrock",
+    "investorIds": ["inv-blackrock-brazil-equity"],
+    "meetingDate": "2026-04-20T14:00:00Z"
+  }
+}

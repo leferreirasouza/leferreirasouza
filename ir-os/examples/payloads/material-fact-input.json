@@ -1,0 +1,10 @@
+{
+  "_comment": "Example: CEO departure triggers Material Fact workflow",
+  "endpoint": "POST /api/v1/workflows/material-fact",
+  "headers": { "Authorization": "Bearer <JWT_TOKEN_CFO>" },
+  "body": {
+    "eventDescription": "The Board of Directors of COMPANY S.A. has approved the resignation of the Chief Executive Officer, effective March 31, 2026. The Board will initiate a search process for a successor.",
+    "eventType": "MANAGEMENT_CHANGE",
+    "deadline": "2026-03-15T14:00:00Z"
+  }
+}

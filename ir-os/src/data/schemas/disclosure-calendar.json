@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DisclosureCalendarEntry",
+  "description": "A scheduled or recurring regulatory/IR disclosure obligation",
+  "type": "object",
+  "required": ["entryId", "title", "disclosureType", "dueDate", "regulatoryBody", "status", "ownerUserId", "isRecurring", "alertDaysBefore"],
+  "properties": {
+    "entryId": { "type": "string", "format": "uuid" },
+    "title": { "type": "string" },
+    "disclosureType": {
+      "type": "string",
+      "enum": ["EARNINGS_RELEASE", "MATERIAL_FACT", "ANNUAL_REPORT", "QUARTERLY_REPORT", "REFERENCE_FORM", "PROXY_CIRCULAR", "SHAREHOLDER_NOTICE", "INSIDER_TRADING_WINDOW", "LOCK_UP_EXPIRY", "DIVIDEND_ANNOUNCEMENT", "CAPITAL_INCREASE", "SHARE_BUYBACK_PROGRAM", "MATERIAL_AGREEMENT", "MANAGEMENT_CHANGE", "OTHER"]
+    },
+    "dueDate": { "type": "string", "format": "date-time" },
+    "regulatoryBody": { "type": "string", "enum": ["CVM", "SEC", "B3", "NYSE", "INTERNAL"] },
+    "filingForm": { "type": "string" },
+    "status": { "type": "string", "enum": ["UPCOMING", "IN_PREPARATION", "FILED", "OVERDUE", "WAIVED"] },
+    "ownerUserId": { "type": "string" },
+    "linkedWorkflowId": { "type": "string" },
+    "notes": { "type": "string" },
+    "isRecurring": { "type": "boolean" },
+    "recurrenceRule": { "type": "string" },
+    "alertDaysBefore": { "type": "array", "items": { "type": "integer" } },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "_comment": "Example output from EarningsCycleAgent — KICKOFF phase",
+  "agentId": "earnings-cycle",
+  "requestId": "req-1744640000-abc123",
+  "classification": {
+    "classification": "DRAFT_INTERNAL",
+    "confidence": "HIGH",
+    "draftStatus": "DRAFT",
+    "sources": [],
+    "redFlags": [],
+    "requiresHumanApproval": true,
+    "approvalLevel": "HEAD_OF_IR"
+  },
+  "output": {
+    "phase": "KICKOFF",
+    "statusSummary": "Q4 2025 earnings cycle initiated. Earnings call scheduled for February 18, 2026 after market close. All kickoff tasks have been assigned.",
+    "completedTasks": [
+      {
+        "taskId": "T-01",
+        "title": "Earnings date confirmed in disclosure calendar",
+        "ownerAgentId": "earnings-cycle",
+        "status": "DONE"
+      },
+      {
+        "taskId": "T-02",
+        "title": "Pre-earnings consensus snapshot pulled",
+        "ownerAgentId": "consensus-sellside",
+        "status": "DONE"
+      }
+    ],
+    "pendingTasks": [
+      {
+        "taskId": "T-03",
+        "title": "Preliminary financials upload from Finance",
+        "ownerAgentId": "HUMAN",
+        "ownerRole": "CFO / Finance Controller",
+        "status": "PENDING",
+        "dueBy": "2026-02-07T18:00:00Z"
+      },
+      {
+        "taskId": "T-04",
+        "title": "Management narrative brief",
+        "ownerAgentId": "HUMAN",
+        "ownerRole": "Head of IR + CFO",
+        "status": "PENDING",
+        "dueBy": "2026-02-10T18:00:00Z"
+      },
+      {
+        "taskId": "T-05",
+        "title": "Draft press release (PT + EN)",
+        "ownerAgentId": "disclosure-drafting",
+        "status": "PENDING",
+        "dueBy": "2026-02-11T18:00:00Z"
+      }
+    ],
+    "blockers": [],
+    "draftArtifacts": [],
+    "complianceCheckpoints": [
+      {
+        "checkpointId": "CC-01",
+        "description": "Trading blackout window active from Feb 3 to Feb 18",
+        "passed": true,
+        "blocksRelease": true,
+        "notes": "Window confirmed with Legal. No insider trading until Feb 19."
+      },
+      {
+        "checkpointId": "CC-02",
+        "description": "Guidance policy confirmed with Legal/CFO",
+        "passed": false,
+        "blocksRelease": true,
+        "notes": "PENDING: CFO must confirm guidance stance before drafting begins."
+      }
+    ],
+    "suggestedTimeline": [
+      { "date": "2026-02-03", "milestone": "Trading blackout opens", "owner": "Legal", "isCritical": true },
+      { "date": "2026-02-07", "milestone": "Preliminary financials due from Finance", "owner": "CFO", "isCritical": true },
+      { "date": "2026-02-10", "milestone": "Management narrative brief", "owner": "Head of IR + CFO", "isCritical": true },
+      { "date": "2026-02-11", "milestone": "First draft of press release + script", "owner": "disclosure-drafting agent", "isCritical": false },
+      { "date": "2026-02-13", "milestone": "Gatekeeper compliance review", "owner": "disclosure-gatekeeper agent", "isCritical": true },
+      { "date": "2026-02-14", "milestone": "Legal review + sign-off", "owner": "Legal Counsel", "isCritical": true },
+      { "date": "2026-02-17", "milestone": "CFO final approval", "owner": "CFO", "isCritical": true },
+      { "date": "2026-02-18", "milestone": "Earnings call + simultaneous release", "owner": "IR + CFO + CEO", "isCritical": true },
+      { "date": "2026-02-19", "milestone": "Post-earnings NDR scheduling", "owner": "Head of IR", "isCritical": false }
+    ],
+    "readinessScore": 15,
+    "readinessNarrative": "Cycle just initiated. Earnings date locked. Awaiting financials and management narrative to begin content development. Two compliance checkpoints remain open."
+  }
+}

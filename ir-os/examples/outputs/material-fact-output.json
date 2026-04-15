@@ -1,0 +1,68 @@
+{
+  "_comment": "Example output from SpecialSituationsAgent triage for CEO departure",
+  "agentId": "special-situations",
+  "requestId": "req-1744640001-def456",
+  "classification": {
+    "classification": "DRAFT_INTERNAL",
+    "confidence": "HIGH",
+    "draftStatus": "DRAFT",
+    "sources": [],
+    "redFlags": [
+      {
+        "code": "PREMATURE_DISCLOSURE",
+        "severity": "CRITICAL",
+        "description": "CEO departure is a material event. Disclosure is mandatory before markets open or on same day per CVM Instrução 358.",
+        "triggeredBy": "eventType: MANAGEMENT_CHANGE",
+        "suggestion": "File Fato Relevante within the same trading session. Do not communicate to any individual investor before filing."
+      }
+    ],
+    "requiresHumanApproval": true,
+    "approvalLevel": "LEGAL_PLUS_CFO"
+  },
+  "output": {
+    "triageAssessment": "CEO departure constitutes a material event under CVM Instrução 358 Art. 2, item IV (change in material management position). Immediate disclosure is required. This event CANNOT be selectively communicated to any investor or analyst before the Fato Relevante is filed.",
+    "severity": "CRITICAL",
+    "requiresImmediateDisclosure": true,
+    "disclosureRationale": "CVM Instrução 358/2002 Art. 3: companies must disclose material facts immediately upon their occurrence. Change in CEO is explicitly material per Art. 2 examples.",
+    "requiresBoardNotification": true,
+    "suggestedResponseOptions": [
+      {
+        "optionId": "OPT-01",
+        "approach": "FULL_DISCLOSURE",
+        "description": "File Fato Relevante immediately with confirmed facts only: CEO departure date, name, reason (to the extent permitted), successor process.",
+        "pros": ["Satisfies CVM 358 requirement", "Eliminates selective disclosure risk", "Market receives complete picture"],
+        "cons": ["Market may react negatively without successor announcement"],
+        "regulatoryRisk": "LOW",
+        "legalSignOffRequired": true
+      },
+      {
+        "optionId": "OPT-02",
+        "approach": "PARTIAL_COMMENT",
+        "description": "File Fato Relevante with confirmed departure facts, note that successor process is underway. Do not speculate on candidates.",
+        "pros": ["Compliant", "Transparent about process"],
+        "cons": ["May generate more analyst questions"],
+        "regulatoryRisk": "LOW",
+        "legalSignOffRequired": true
+      }
+    ],
+    "draftStatementOutline": "[STRUCTURAL OUTLINE ONLY — NOT FINAL TEXT]\n1. Header: Company name, TICKER, date and place\n2. Opening: 'COMPANY comunica ao mercado que...'\n3. Event: CEO name, effective date of departure\n4. Context: Board decision, amicable departure (if applicable)\n5. Transition: Description of succession process\n6. Closing: Standard regulatory closing, signatures of IR Officer and CFO\n7. Legal basis: Art. 3 da Instrução CVM nº 358/2002",
+    "doNotSay": [
+      "Do not name potential successors (names not confirmed)",
+      "Do not comment on financial performance or guidance in this filing",
+      "Do not explain internal reasons beyond what is confirmed",
+      "Do not discuss this with any investor before filing"
+    ],
+    "regulatoryObligations": [
+      "File Fato Relevante via CVM ENET on same day as board decision",
+      "File Form 6-K with SEC if company is dual-listed (within 4 business days)",
+      "Notify B3 simultaneously",
+      "Update IR website simultaneously with filing"
+    ],
+    "internalStakeholdersToAlert": ["Board Chair", "CFO", "Legal Counsel", "Head of IR", "Communications Director"],
+    "mediaPressureRisk": "HIGH",
+    "timeToMandatoryDisclosure": "Same trading session, or before market open next day per CVM 358",
+    "escalatedTo": ["legal", "cfo", "head-of-ir", "board"],
+    "draftStatus": "DRAFT",
+    "classification": "DRAFT_INTERNAL"
+  }
+}

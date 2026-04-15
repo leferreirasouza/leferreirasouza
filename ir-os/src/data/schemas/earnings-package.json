@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EarningsPackage",
+  "description": "Complete quarterly earnings release package. All fields are DRAFT_INTERNAL until CFO approval.",
+  "type": "object",
+  "required": ["packageId", "period", "status", "financials", "complianceChecksPassed"],
+  "properties": {
+    "packageId": { "type": "string" },
+    "period": {
+      "type": "object",
+      "required": ["year", "quarter", "label"],
+      "properties": {
+        "year": { "type": "integer" },
+        "quarter": { "type": "integer", "enum": [1, 2, 3, 4] },
+        "label": { "type": "string", "example": "4Q25" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "PENDING_COMPLIANCE_REVIEW", "PENDING_LEGAL_REVIEW", "PENDING_CFO_APPROVAL", "APPROVED", "PUBLISHED", "REJECTED", "ARCHIVED"]
+    },
+    "financials": {
+      "type": "object",
+      "description": "All financial KPIs. Every value must trace to an audited or reviewed source.",
+      "properties": {
+        "revenue": { "$ref": "#/definitions/FinancialLine" },
+        "ebitda": { "$ref": "#/definitions/FinancialLine" },
+        "ebit": { "$ref": "#/definitions/FinancialLine" },
+        "netIncome": { "$ref": "#/definitions/FinancialLine" },
+        "netDebt": { "$ref": "#/definitions/FinancialLine" },
+        "capex": { "$ref": "#/definitions/FinancialLine" },
+        "fcf": { "$ref": "#/definitions/FinancialLine" },
+        "eps": { "$ref": "#/definitions/FinancialLine" },
+        "currency": { "type": "string", "enum": ["BRL", "USD"] },
+        "reportingStandard": { "type": "string", "enum": ["IFRS", "BR-GAAP", "US-GAAP"] },
+        "auditStatus": { "type": "string", "enum": ["UNAUDITED", "REVIEWED", "AUDITED"] }
+      }
+    },
+    "guidance": {
+      "type": "object",
+      "description": "PROHIBITED until CEO + CFO + Legal approve explicitly",
+      "properties": {
+        "guidanceId": { "type": "string" },
+        "metric": { "type": "string" },
+        "lowEnd": { "type": "number" },
+        "midPoint": { "type": "number" },
+        "highEnd": { "type": "number" },
+        "unit": { "type": "string" },
+        "year": { "type": "integer" },
+        "isNewGuidance": { "type": "boolean" },
+        "approvalRequired": { "type": "boolean", "const": true },
+        "approvedBy": { "type": "string" },
+        "approvedAt": { "type": "string", "format": "date-time" },
+        "classifiedAs": { "type": "string", "const": "PROHIBITED" }
+      }
+    },
+    "pressRelease": { "type": "string", "description": "artifactId reference" },
+    "earningsScript": { "type": "string", "description": "artifactId reference" },
+    "presentation": { "type": "string", "description": "artifactId reference" },
+    "complianceChecksPassed": { "type": "boolean" },
+    "redFlagIds": { "type": "array", "items": { "type": "string" } }
+  },
+  "definitions": {
+    "FinancialLine": {
+      "type": "object",
+      "required": ["label", "value", "unit"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "number" },
+        "unit": { "type": "string" },
+        "yoyChangePercent": { "type": "number" },
+        "qoqChangePercent": { "type": "number" },
+        "vsConsensus": { "type": "number", "description": "% variance vs. consensus" },
+        "vsGuidance": { "type": "number", "description": "% variance vs. guidance" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

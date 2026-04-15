@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+data/ir-os.db
+data/audit/
+*.jsonl
+*.log
+coverage/
+.DS_Store

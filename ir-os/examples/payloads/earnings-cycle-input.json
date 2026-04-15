@@ -1,0 +1,9 @@
+{
+  "_comment": "Example input to initiate Q4 2025 earnings cycle workflow",
+  "endpoint": "POST /api/v1/workflows/earnings",
+  "headers": { "Authorization": "Bearer <JWT_TOKEN_HEAD_OF_IR>" },
+  "body": {
+    "period": { "year": 2025, "quarter": 4, "label": "4Q25" },
+    "earningsDate": "2026-02-18T22:00:00Z"
+  }
+}
