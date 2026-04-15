@@ -6,6 +6,7 @@ import { workflowRouter } from "./routes/workflows";
 import { approvalsRouter } from "./routes/approvals";
 import { agentsRouter } from "./routes/agents";
 import { auditRouter } from "./routes/audit";
+import { ingestRouter } from "./routes/ingest";
 import { auditLogMiddleware } from "./middleware/audit-log";
 import { authMiddleware } from "./middleware/auth";
 
@@ -36,6 +37,7 @@ app.use("/api/v1/workflows", workflowRouter);
 app.use("/api/v1/approvals", approvalsRouter);
 app.use("/api/v1/agents", agentsRouter);
 app.use("/api/v1/audit", auditRouter);
+app.use("/api/v1/ingest", ingestRouter);
 
 // ---- Health ----
 app.get("/health", (_req, res) => {
