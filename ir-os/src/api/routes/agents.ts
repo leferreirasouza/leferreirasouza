@@ -21,6 +21,7 @@ import { IRWebsiteAgent } from "../../agents/ir-website";
 import { ShareholderAGMAgent } from "../../agents/shareholder-agm";
 import { SpecialSituationsAgent } from "../../agents/special-situations";
 import { KnowledgeLibrarianAgent } from "../../agents/knowledge-librarian";
+import { ValuationStrategyAgent } from "../../agents/valuation-strategy";
 
 // ---- Singletons ----
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -44,6 +45,7 @@ const registry = AgentRegistry.getInstance();
   new ShareholderAGMAgent(anthropic, compliance, audit),
   new SpecialSituationsAgent(anthropic, compliance, audit),
   new KnowledgeLibrarianAgent(anthropic, compliance, audit),
+  new ValuationStrategyAgent(anthropic, compliance, audit),
 ].forEach((a) => {
   if (!registry.has(a.agentId)) registry.register(a);
 });

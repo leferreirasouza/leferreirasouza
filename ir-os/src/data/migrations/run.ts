@@ -247,6 +247,116 @@ db.exec(`
   );
 `);
 
+// ── REFERENCE LIBRARY (foundational knowledge, cross-company) ─────────────
+db.exec(`
+  CREATE TABLE IF NOT EXISTS reference_library (
+    ref_id            TEXT PRIMARY KEY,
+    title             TEXT NOT NULL,
+    knowledge_domain  TEXT NOT NULL,   -- VALUATION | IR_PRACTICE | REGULATORY | ACCOUNTING | STRATEGY | MACRO | ESG_STANDARDS | WRITING
+    ref_type          TEXT NOT NULL,   -- STANDARD | FRAMEWORK | ACADEMIC | REGULATORY_TEXT | DATA | GUIDE
+    source_name       TEXT NOT NULL,   -- e.g. "Mauboussin / Morgan Stanley Consilient Observer"
+    source_url        TEXT,
+    local_path        TEXT,
+    language          TEXT NOT NULL DEFAULT 'EN',
+    quality_score     REAL,            -- 0.0–1.0 assigned by ingestor
+    is_curated        INTEGER NOT NULL DEFAULT 1,  -- 1 = manually vetted
+    last_refreshed_at TEXT,
+    raw_text          TEXT,
+    metadata_json     TEXT,            -- structured key-value data (e.g. Damodaran spreadsheet cells)
+    word_count        INTEGER,
+    page_count        INTEGER,
+    tags              TEXT,            -- JSON array of topical tags
+    ingested_at       TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE VIRTUAL TABLE IF NOT EXISTS reference_fts USING fts5(
+    ref_id UNINDEXED,
+    title,
+    raw_text,
+    knowledge_domain UNINDEXED,
+    ref_type UNINDEXED,
+    source_name,
+    content='reference_library',
+    content_rowid='rowid'
+  );
+
+  CREATE TRIGGER IF NOT EXISTS reference_ai AFTER INSERT ON reference_library BEGIN
+    INSERT INTO reference_fts(rowid, ref_id, title, raw_text, knowledge_domain, ref_type, source_name)
+    VALUES (new.rowid, new.ref_id, new.title, new.raw_text, new.knowledge_domain, new.ref_type, new.source_name);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS reference_au AFTER UPDATE ON reference_library BEGIN
+    INSERT INTO reference_fts(reference_fts, rowid, ref_id, title, raw_text, knowledge_domain, ref_type, source_name)
+    VALUES ('delete', old.rowid, old.ref_id, old.title, old.raw_text, old.knowledge_domain, old.ref_type, old.source_name);
+    INSERT INTO reference_fts(rowid, ref_id, title, raw_text, knowledge_domain, ref_type, source_name)
+    VALUES (new.rowid, new.ref_id, new.title, new.raw_text, new.knowledge_domain, new.ref_type, new.source_name);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS reference_ad AFTER DELETE ON reference_library BEGIN
+    INSERT INTO reference_fts(reference_fts, rowid, ref_id, title, raw_text, knowledge_domain, ref_type, source_name)
+    VALUES ('delete', old.rowid, old.ref_id, old.title, old.raw_text, old.knowledge_domain, old.ref_type, old.source_name);
+  END;
+
+  -- ── REFERENCE CHUNKS ──────────────────────────────────────────────────────
+  CREATE TABLE IF NOT EXISTS reference_chunks (
+    chunk_id      TEXT PRIMARY KEY,
+    ref_id        TEXT NOT NULL REFERENCES reference_library(ref_id),
+    chunk_index   INTEGER NOT NULL,
+    content       TEXT NOT NULL,
+    token_count   INTEGER,
+    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE VIRTUAL TABLE IF NOT EXISTS reference_chunks_fts USING fts5(
+    chunk_id UNINDEXED,
+    ref_id UNINDEXED,
+    content,
+    content='reference_chunks',
+    content_rowid='rowid'
+  );
+
+  CREATE TRIGGER IF NOT EXISTS ref_chunks_ai AFTER INSERT ON reference_chunks BEGIN
+    INSERT INTO reference_chunks_fts(rowid, chunk_id, ref_id, content)
+    VALUES (new.rowid, new.chunk_id, new.ref_id, new.content);
+  END;
+
+  -- ── REFERENCE INGEST LOG ─────────────────────────────────────────────────
+  CREATE TABLE IF NOT EXISTS reference_ingest_log (
+    log_id        TEXT PRIMARY KEY,
+    source_id     TEXT NOT NULL,    -- from reference-sources.ts registry
+    source_name   TEXT NOT NULL,
+    status        TEXT NOT NULL,    -- 'SUCCESS' | 'FAILED' | 'SKIPPED' | 'MANUAL_ONLY'
+    ref_id        TEXT,             -- populated on SUCCESS
+    quality_score REAL,
+    error_message TEXT,
+    word_count    INTEGER,
+    started_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    completed_at  TEXT
+  );
+
+  -- ── NEWS ITEMS ────────────────────────────────────────────────────────────
+  CREATE TABLE IF NOT EXISTS news_items (
+    news_id            TEXT PRIMARY KEY,
+    company_id         TEXT REFERENCES companies(company_id),   -- null = market-wide news
+    source_id          TEXT NOT NULL,
+    source_name        TEXT NOT NULL,
+    title              TEXT NOT NULL,
+    summary            TEXT,
+    url                TEXT NOT NULL,
+    published_at       TEXT NOT NULL,
+    fetched_at         TEXT NOT NULL DEFAULT (datetime('now')),
+    language           TEXT NOT NULL DEFAULT 'PT',
+    category           TEXT,        -- EARNINGS | REGULATION | M&A | MACRO | SECTOR | ESG
+    sectors_json       TEXT,        -- JSON array of relevant sectors
+    relevance_score    REAL,        -- 0.0–1.0
+    relevance_tags_json TEXT,       -- JSON array: ["B3:PETR4", "OIL_SECTOR", "EARNINGS_SEASON"]
+    sentiment          TEXT,        -- POSITIVE | NEGATIVE | NEUTRAL
+    is_read            INTEGER NOT NULL DEFAULT 0,
+    is_flagged         INTEGER NOT NULL DEFAULT 0,
+    analysis_note      TEXT         -- IR team annotation
+  );
+`);
+
 // Verify
 const tables = db
   .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")

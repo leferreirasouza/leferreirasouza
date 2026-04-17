@@ -155,4 +155,30 @@ export const COMPLIANCE_RULES: ComplianceRule[] = [
       return false;
     },
   },
+
+  // ---- VALUATION OUTPUT CLASSIFICATION ----
+  {
+    code: "CR-009",
+    description:
+      "Modeled valuation figures (DCF outputs, implied valuation ranges, price targets) must never appear in PUBLIC or EXTERNAL classified output",
+    severity: "BLOCK",
+    scope: ["OUTPUT"],
+    test: (content) => {
+      // Detect valuation-model outputs
+      const valuationPatterns = [
+        /(?:DCF|discounted cash flow).*(?:implied|target|fair value)/gi,
+        /(?:fair value|intrinsic value|price target)\s+(?:of|=|:)\s+(?:R\$|BRL|USD|\$)\s*[\d,\.]+/gi,
+        /(?:valuation range|implied EV|equity value)\s+(?:of|between|:)\s+(?:R\$|BRL|USD|\$)/gi,
+        /WACC.*terminal.*growth/gi,
+        /EV\/EBITDA.*multiple.*implied/gi,
+      ];
+      // Only block if also classified as PUBLIC or EXTERNAL
+      const isPublicOrExternal =
+        content.includes('"classification":"PUBLIC"') ||
+        content.includes('"classification":"EXTERNAL"') ||
+        content.includes('"draftStatus":"PUBLISHED"');
+      const hasValuationOutput = valuationPatterns.some((p) => p.test(content));
+      return hasValuationOutput && isPublicOrExternal;
+    },
+  },
 ];

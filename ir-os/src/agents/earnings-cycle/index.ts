@@ -31,6 +31,30 @@ export interface EarningsCycleInput {
   specialTopics?: string[];   // topics management wants to address
 }
 
+export interface VarianceDriver {
+  metric: string;
+  driver: string;
+  magnitude: string;   // e.g. "+R$120M" or "+180bps"
+  classification: "STRUCTURAL" | "TRANSITORY" | "UNCLEAR";
+}
+
+export interface EarningsMethodologyTrace {
+  varianceAnalysis?: {
+    frameworkApplied: string;                   // e.g. "VPMF Revenue Bridge"
+    keyDriversIdentified: VarianceDriver[];
+    structuralVsTransitory: { item: string; classification: "STRUCTURAL" | "TRANSITORY" | "UNCLEAR" }[];
+  };
+  narrativeConstruction?: {
+    strategicThemes: string[];                  // exactly 3 themes
+    themeProofPoints: Record<string, string[]>; // theme → list of proof points with [SOURCE:]
+  };
+  consensusBridging?: {
+    scenario: "BEAT" | "MISS" | "IN_LINE";
+    beatMissByMetric: { metric: string; actual: number; consensus: number; delta: number; deltaPercent: number }[];
+    explanation: string;
+  };
+}
+
 export interface EarningsCycleOutput {
   phase: string;
   statusSummary: string;
@@ -42,6 +66,7 @@ export interface EarningsCycleOutput {
   suggestedTimeline: TimelineItem[];
   readinessScore: number;   // 0-100
   readinessNarrative: string;
+  methodologyTrace?: EarningsMethodologyTrace;
 }
 
 export interface EarningsTask {

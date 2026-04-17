@@ -44,7 +44,8 @@ export interface SourceAttribution {
     | "APPROVED_MESSAGING"
     | "EXTERNAL_NEWS"
     | "TRANSCRIPT"
-    | "MANUAL_INPUT";
+    | "MANUAL_INPUT"
+    | "REFERENCE_LIBRARY";
   title: string;
   url?: string;
   pageOrSection?: string;
@@ -92,4 +93,6 @@ export type RedFlagCode =
   | "PROHIBITED_WORD"               // legally restricted term in context
   | "MISSING_SAFE_HARBOR"           // forward-looking statement missing safe-harbor language
   | "UNVERIFIED_METRIC"             // KPI without audited or restated basis
-  | "REGULATORY_DEADLINE_BREACH";   // approaching or past mandatory filing deadline
+  | "REGULATORY_DEADLINE_BREACH"    // approaching or past mandatory filing deadline
+  | "LOW_QUALITY_DRAFT"             // self-assessment rubric score < 3.5 — requires revision before gatekeeper review
+  | "VALUATION_IN_PUBLIC_OUTPUT";   // modeled valuation figures (DCF, implied ranges) in non-internal output

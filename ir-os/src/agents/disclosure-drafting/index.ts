@@ -21,17 +21,33 @@ export interface DisclosureDraftingInput {
   tone?: "FORMAL" | "ACCESSIBLE" | "CONSERVATIVE";
 }
 
+export interface DraftQualityAssessment {
+  scores: {
+    clarity: 1 | 2 | 3 | 4 | 5;
+    precision: 1 | 2 | 3 | 4 | 5;
+    compliance: 1 | 2 | 3 | 4 | 5;
+    investorFocus: 1 | 2 | 3 | 4 | 5;
+    structure: 1 | 2 | 3 | 4 | 5;
+  };
+  overallScore: number;          // mean of the 5 dimensions
+  flaggedDimensions: string[];   // dimensions scoring ≤2
+  narrativeThemes: string[];     // the 3 strategic themes identified
+}
+
 export interface DisclosureDraftingOutput {
   draftContent: string;
   language: string;
   artifactType: ArtifactType;
   wordCount: number;
   keyMessages: string[];
+  narrativeThemes: string[];
   sourcesCited: string[];
-  forwardLookingStatements: string[];   // isolated for safe-harbor check
-  financialFiguresUsed: string[];        // for source attribution
-  draftStatus: "DRAFT";                  // always DRAFT — never APPROVED
+  forwardLookingStatements: string[];    // isolated for safe-harbor check
+  financialFiguresUsed: string[];         // for source attribution
+  draftStatus: "DRAFT";                   // always DRAFT — never APPROVED
   submittedForGatekeeperReview: boolean;
+  writingMethodologyApplied: string[];   // e.g. ["PYRAMID_PRINCIPLE", "SCQA"]
+  qualityAssessment?: DraftQualityAssessment;
   reviewNotes: string;
   structuralOutline: string[];
 }
@@ -118,6 +134,8 @@ export class DisclosureDraftingAgent extends BaseAgent<
         financialFiguresUsed: [],
         draftStatus: "DRAFT",
         submittedForGatekeeperReview: false,
+        narrativeThemes: [],
+        writingMethodologyApplied: [],
         reviewNotes: "Structured parse failed. Review raw content.",
         structuralOutline: [],
       };

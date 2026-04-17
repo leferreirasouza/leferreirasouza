@@ -22,7 +22,10 @@ export type AgentId =
   | "ir-website"
   | "shareholder-agm"
   | "special-situations"
-  | "knowledge-librarian";
+  | "knowledge-librarian"
+  | "valuation-strategy"
+  | "news-intelligence"
+  | "self-development";
 
 export type AgentMode = "INTERNAL_ADVISORY" | "EXTERNAL_COMMUNICATION";
 
