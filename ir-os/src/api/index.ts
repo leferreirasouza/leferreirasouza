@@ -9,6 +9,7 @@ import { auditRouter } from "./routes/audit";
 import { ingestRouter } from "./routes/ingest";
 import { auditLogMiddleware } from "./middleware/audit-log";
 import { authMiddleware } from "./middleware/auth";
+import { startReferenceScheduler } from "../data/ingestion/reference-scheduler";
 
 const app = express();
 const PORT = process.env.API_PORT ?? 3000;
@@ -62,6 +63,7 @@ app.use(
 
 app.listen(PORT, () => {
   console.log(`IR-OS API running on port ${PORT}`);
+  startReferenceScheduler();
 });
 
 export default app;
