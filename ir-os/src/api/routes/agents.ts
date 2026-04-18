@@ -4,7 +4,19 @@ import Anthropic from "@anthropic-ai/sdk";
 import { AgentRegistry } from "../../agents/base/agent-registry";
 import { ComplianceEngine } from "../../compliance/engine";
 import { AuditLogger } from "../../audit/logger";
-import type { AgentRequest, AgentContext, AgentId } from "../../types";
+import type { AgentRequest, AgentContext, AgentId, FiscalPeriod } from "../../types";
+import { CompanyRepository } from "../../data/repositories/company-repository";
+
+const companyRepo = new CompanyRepository();
+
+/** Derive the current fiscal quarter from today's date. */
+function inferCurrentPeriod(): FiscalPeriod {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // 1–12
+  const quarter = Math.ceil(month / 3) as 1 | 2 | 3 | 4;
+  return { year, quarter, label: `${quarter}Q${String(year).slice(2)}` };
+}
 
 // Import all agents
 import { ChiefOfStaffAgent } from "../../agents/chief-of-staff";
@@ -75,13 +87,29 @@ agentsRouter.post("/:agentId/invoke", async (req: Request, res: Response) => {
     context: Partial<AgentContext>;
   };
 
+  // Resolve company: request body > JWT default > reject
+  const companyId = context.companyId ?? req.user!.companyId;
+  if (!companyId) {
+    res.status(400).json({
+      error: "companyId is required. Pass it in context.companyId or authenticate with a company-scoped token.",
+    });
+    return;
+  }
+
+  // Hydrate AgentContext from the companies table
+  const company = companyRepo.findById(companyId);
+  if (!company) {
+    res.status(404).json({ error: `Company '${companyId}' not found. Register it with POST /api/v1/companies.` });
+    return;
+  }
+
   const fullContext: AgentContext = {
-    companyId: context.companyId ?? "default",
-    ticker: context.ticker ?? "UNKNOWN",
-    exchange: context.exchange ?? "B3",
-    reportingCurrency: context.reportingCurrency ?? "BRL",
-    fiscalYearEnd: context.fiscalYearEnd ?? "12-31",
-    currentPeriod: context.currentPeriod ?? { year: 2025, quarter: 1, label: "1Q25" },
+    companyId: company.company_id,
+    ticker: company.ticker,
+    exchange: company.exchange as AgentContext["exchange"],
+    reportingCurrency: company.currency as AgentContext["reportingCurrency"],
+    fiscalYearEnd: company.fiscal_year_end,
+    currentPeriod: context.currentPeriod ?? inferCurrentPeriod(),
     sessionId: `session-${Date.now()}`,
     traceId: `trace-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     authorizedDataSources: context.authorizedDataSources ?? ["PUBLIC", "INTERNAL_APPROVED"],

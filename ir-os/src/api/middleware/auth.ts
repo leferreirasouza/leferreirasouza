@@ -6,7 +6,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
-      user?: { userId: string; role: UserRole; email: string };
+      user?: { userId: string; role: UserRole; email: string; companyId?: string };
     }
   }
 }
@@ -16,8 +16,8 @@ export function authMiddleware(
   res: Response,
   next: NextFunction
 ): void {
-  // Skip auth for health check
-  if (req.path === "/health") {
+  // Skip auth for health check and login
+  if (req.path === "/health" || req.path.startsWith("/api/v1/auth/login")) {
     next();
     return;
   }
@@ -37,6 +37,7 @@ export function authMiddleware(
       userId: string;
       role: UserRole;
       email: string;
+      companyId?: string;
     };
 
     req.user = decoded;

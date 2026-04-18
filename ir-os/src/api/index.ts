@@ -7,6 +7,8 @@ import { approvalsRouter } from "./routes/approvals";
 import { agentsRouter } from "./routes/agents";
 import { auditRouter } from "./routes/audit";
 import { ingestRouter } from "./routes/ingest";
+import { companiesRouter } from "./routes/companies";
+import { authRouter } from "./routes/auth";
 import { auditLogMiddleware } from "./middleware/audit-log";
 import { authMiddleware } from "./middleware/auth";
 import { startReferenceScheduler } from "../data/ingestion/reference-scheduler";
@@ -34,6 +36,8 @@ app.use(authMiddleware);
 app.use(auditLogMiddleware);
 
 // ---- Routes ----
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/companies", companiesRouter);
 app.use("/api/v1/workflows", workflowRouter);
 app.use("/api/v1/approvals", approvalsRouter);
 app.use("/api/v1/agents", agentsRouter);

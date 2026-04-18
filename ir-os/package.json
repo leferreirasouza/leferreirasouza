@@ -22,7 +22,8 @@
     "setup": "tsx scripts/setup.ts",
     "audit:export": "tsx src/audit/export.ts",
     "refresh:reference": "tsx scripts/refresh-reference-library.ts",
-    "seed:reference": "tsx scripts/seed-reference-library.ts"
+    "seed:reference": "tsx scripts/seed-reference-library.ts",
+    "company:add": "tsx scripts/add-company.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",

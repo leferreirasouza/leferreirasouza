@@ -247,6 +247,33 @@ db.exec(`
   );
 `);
 
+// ── MULTI-COMPANY ACCESS CONTROL ──────────────────────────────────────────
+db.exec(`
+  -- Many-to-many: users ↔ companies (a user can work across multiple companies)
+  CREATE TABLE IF NOT EXISTS user_companies (
+    id          TEXT PRIMARY KEY,
+    user_id     TEXT NOT NULL REFERENCES users(user_id),
+    company_id  TEXT NOT NULL REFERENCES companies(company_id),
+    role        TEXT NOT NULL DEFAULT 'MEMBER',  -- OWNER | MEMBER
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(user_id, company_id)
+  );
+
+  -- Back-fill: every existing user gets access to their assigned company
+  INSERT OR IGNORE INTO user_companies (id, user_id, company_id, role)
+  SELECT hex(randomblob(16)), user_id, company_id, 'OWNER'
+  FROM users
+  WHERE company_id IS NOT NULL AND company_id != '';
+`);
+
+// Add company_id to artifacts if not already present (safe ALTER TABLE)
+const artifactsColumns = db
+  .prepare("PRAGMA table_info(artifacts)")
+  .all() as { name: string }[];
+if (!artifactsColumns.some((c) => c.name === "company_id")) {
+  db.exec(`ALTER TABLE artifacts ADD COLUMN company_id TEXT NOT NULL DEFAULT '';`);
+}
+
 // ── REFERENCE LIBRARY (foundational knowledge, cross-company) ─────────────
 db.exec(`
   CREATE TABLE IF NOT EXISTS reference_library (
