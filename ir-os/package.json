@@ -23,7 +23,10 @@
     "audit:export": "tsx src/audit/export.ts",
     "refresh:reference": "tsx scripts/refresh-reference-library.ts",
     "seed:reference": "tsx scripts/seed-reference-library.ts",
-    "company:add": "tsx scripts/add-company.ts"
+    "company:add": "tsx scripts/add-company.ts",
+    "ui:install": "cd frontend && npm install",
+    "ui:dev": "cd frontend && npm run dev",
+    "ui:build": "cd frontend && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",

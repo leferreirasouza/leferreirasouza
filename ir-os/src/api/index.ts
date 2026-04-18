@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
+import { join } from "path";
+import { existsSync } from "fs";
 import { workflowRouter } from "./routes/workflows";
 import { approvalsRouter } from "./routes/approvals";
 import { agentsRouter } from "./routes/agents";
@@ -48,6 +50,16 @@ app.use("/api/v1/ingest", ingestRouter);
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", version: "0.1.0", timestamp: new Date().toISOString() });
 });
+
+// ---- Serve built React dashboard (production) ----
+const PUBLIC_DIR = join(__dirname, "../../public");
+if (existsSync(PUBLIC_DIR)) {
+  app.use(express.static(PUBLIC_DIR));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/")) return next();
+    res.sendFile(join(PUBLIC_DIR, "index.html"));
+  });
+}
 
 // ---- Global error handler ----
 app.use(
